@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:green_scanner/home.dart';
 import 'package:green_scanner/login.dart';
-import 'package:green_scanner/screens/history/history.dart';
+import 'package:green_scanner/widgets/navbar.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Login(),
       routes: {
-        '/home': (context) => Home()
+        '/navigator': (context) => NavBar()
       }
     );
   }

@@ -21,6 +21,9 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  barcode_scan: ^3.0.1
+  curved_navigation_bar: ^0.3.2
+  flutter_speed_dial: ^1.2.5
   flutter:
     sdk: flutter
 
@@ -38,7 +41,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
