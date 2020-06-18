@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:green_scanner/home.dart';
 import 'package:green_scanner/login.dart';
+import 'package:green_scanner/screens/history/history.dart';
 
 void main() {
   runApp(MyApp());
