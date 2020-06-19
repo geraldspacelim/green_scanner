@@ -16,14 +16,54 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
 
   String qrResult = "Not Yet";
+  String _setImage() {
+
+    int score = 900;
+
+    if(score > 0 && score < 200){
+      new Future.delayed(const Duration(seconds: 2),(){
+
+      });
+      return "assets/1f.gif";
+    }
+
+    else if (score >= 200 && score < 400){
+      return "assets/2f.gif";
+    }
+
+    else if (score >= 400 && score < 600){
+      return "assets/3f.gif";
+    }
+
+    else if (score >= 600 && score < 800){
+      return "assets/4f.gif";
+    }
+
+    else if (score >= 800 && score < 1000){
+      return "assets/5f.gif";
+    }
+
+    else if (score >= 1000 && score < 1200){
+      return "assets/6f.gif";
+    }
+
+    else return "assets/real_tree.gif";
+
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: <Widget>[
-          new Center(
-            child: Text(qrResult),
+          new Container(
+            padding: const EdgeInsets.all(20.0),
+            child: new Column(
+              children: <Widget>[
+                new Text(qrResult),
+                new Image(image: new AssetImage(_setImage() ?? "assets/real_tree.gif"))
+              ],
+            ),
           ),
           Positioned(
             right: 10,
@@ -66,6 +106,8 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+
+  // RFlutter_PopUp Dialog
   _onAlertButtonPressed(context) {
     Alert(
       context: context,
