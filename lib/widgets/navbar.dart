@@ -1,5 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:green_scanner/screens/home/home.dart';
 import 'package:green_scanner/screens/rewards/rewards.dart';
 import 'package:green_scanner/screens/history/history.dart';
@@ -11,6 +12,7 @@ class NavBar extends StatefulWidget {
 }
 
 class _NavBarState extends State<NavBar> {
+
   int pageIndex = 0;
 
   // Creating Pages
@@ -46,6 +48,9 @@ class _NavBarState extends State<NavBar> {
 
   @override
   Widget build(BuildContext context) {
+    // FULL SCREEN APP HERE
+    SystemChrome.setEnabledSystemUIOverlays([]);
+
     return Scaffold(
         bottomNavigationBar: CurvedNavigationBar(
           color: Colors.lightGreen,
