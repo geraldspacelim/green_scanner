@@ -4,12 +4,14 @@ import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:green_scanner/constants/constants.dart';
 import 'package:green_scanner/database.dart';
 import 'package:green_scanner/model/purchase.dart';
 import 'package:green_scanner/model/runnercard.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:provider/provider.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:vector_math/vector_math_64.dart' as math;
 
 import '../../login.dart';
 import '../../login.dart';
@@ -22,35 +24,73 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _RadialProgress extends StatelessWidget {
 
-  List<charts.Series<Task,String>> _seriesPieData;
+  final double height, width,progress;
 
-  _generateData(){
-    var pieData = [
-      new Task("Run", 20, Colors.green),
-      new Task("Jump", 80, Colors.black),
-    ];
+  const _RadialProgress({Key key, this.height, this.width, this.progress}) : super(key: key);
 
-    _seriesPieData.add(
-      charts.Series(
-        data: pieData,
-        domainFn: (Task task,_) => task.task,
-        measureFn: (Task task,_) => task.taskvalue,
-        colorFn: (Task task, _) =>
-            charts.ColorUtil.fromDartColor(task.colorval),
-        id: 'Daily',
-        labelAccessorFn: (Task row,_)=>'${row.taskvalue}',
-      )
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      painter: _RadialPainter(progress: 0.7),
+      child: Container(
+        height: height,
+        width: width,
+        child: Align(
+          alignment: Alignment.center,
+          child: RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(text: "1600g", style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.black,
+                )),
+                TextSpan(text: "\n"),
+                TextSpan(text: "CO2 Saved", style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.black,
+                )),
+              ]
+            ),
+          ),
+        ),
+      ),
     );
   }
+}
+
+class _RadialPainter extends CustomPainter{
+
+  final double progress;
+
+  _RadialPainter({this.progress});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    Paint paint = Paint()..strokeWidth = 10..color=Color(0xFF200087)..style=PaintingStyle.stroke..strokeCap=StrokeCap.round;
+
+    Offset center = Offset(size.width/2,size.height/2);
+    double relativeProgress = 360 * progress;
+
+    canvas.drawArc(Rect.fromCircle(center: center, radius: size.width/2), math.radians(-90), math.radians(-relativeProgress), false, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return true;
+  }
+
+}
+
+class _HomeState extends State<Home> {
 
   @override
   void initState(){
     _updateImage();
     super.initState();
-    _seriesPieData = List<charts.Series<Task,String>>();
-    _generateData();
   }
 
   String qrResult = "Not Yet";
@@ -126,8 +166,9 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
-
+    final width = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: Constants.backgroundColor,
       body: Stack(
         children: <Widget>[
           Positioned(
@@ -148,12 +189,6 @@ class _HomeState extends State<Home> {
                 ),
               ),
             ),
-          ),
-          RaisedButton(
-            color: Colors.red,
-            onPressed: () async {
-              await DatabaseService().startDb();
-            },
           ),
           Positioned(
             top: height * 0.38,
@@ -204,43 +239,47 @@ class _HomeState extends State<Home> {
                   SizedBox(height: 20,),
                   Expanded(
                     child: Container(
+                      height: 200,
+                      width: 400,
                       margin: const EdgeInsets.only(bottom: 10, left: 32, right: 32,),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(height: 15,),
+                          Row(
+                            children: <Widget>[
+                              _RadialProgress(
+                                width: width * 0.25,
+                                height: width * 0.25,
+                                progress: 0.3,
+                              ),
+                              SizedBox(width: 15,),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisSize: MainAxisSize.max,
+                                children: <Widget>[
+                                  _ProgressBar(category: "Food", progress: 0.3, progressColor: Colors.green, leftAmount: 200,width: width * 0.35,),
+                                  SizedBox(height: 5,),
+                                  _ProgressBar(category: "Transport", progress: 0.5, progressColor: Colors.yellow, leftAmount: 100,width: width * 0.35,),
+                                  SizedBox(height: 5,),
+                                  _ProgressBar(category: "Products", progress: 0.8, progressColor: Colors.redAccent, leftAmount: 500,width: width * 0.35,),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(30)),
                         gradient: LinearGradient(
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                           colors: [
-                            const Color(0xFF20008B),
-                            const Color(0XFF200087),
+                            const Color(0xFFB5E670),
+                            const Color(0XFF579A22),
                           ],
                         )
                       ),
-                        child: charts.PieChart(
-                          _seriesPieData,
-                          animate: true,
-                          animationDuration: Duration(milliseconds: 500),
-                          behaviors: [
-                            new charts.DatumLegend(
-                              outsideJustification: charts.OutsideJustification.startDrawArea,
-                              horizontalFirst: false,
-                              desiredMaxRows: 2,
-                              cellPadding: new EdgeInsets.only(right: 4.0, bottom: 4.0),
-                              entryTextStyle: charts.TextStyleSpec(
-                                  color: charts.MaterialPalette.purple.shadeDefault,
-                                  fontFamily: 'Georgia',
-                                  fontSize: 11),
-                            )
-                          ],
-                          defaultRenderer: new charts.ArcRendererConfig(
-                              arcWidth: 100,
-                              arcRendererDecorators: [
-                                new charts.ArcLabelDecorator(
-                                    labelPosition: charts.ArcLabelPosition.inside),
-                              ]
-                          ),
-                        ),
-
                     )
                   )
                 ],
@@ -261,12 +300,13 @@ class _HomeState extends State<Home> {
         ],
       ),
       floatingActionButton: SpeedDial(
-        backgroundColor: Colors.green,
+        backgroundColor: Constants.dimGreen,
         child: Icon(Icons.camera),
-        overlayOpacity: 0.2,
+        overlayOpacity: 0.5,
         children: [
           SpeedDialChild(
             child:Icon(Icons.camera_alt),
+            backgroundColor: Constants.fabMicro,
             label: "Camera",
             onTap: () async {
               var result = await BarcodeScanner.scan();
@@ -282,6 +322,7 @@ class _HomeState extends State<Home> {
             }
           ),
           SpeedDialChild(
+              backgroundColor: Constants.fabMicro,
             child: Icon(Icons.image),
             label: "Gallery",
             onTap: () => print("2nd")
@@ -303,7 +344,7 @@ class _HomeState extends State<Home> {
             "Log Out",
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
-          color: Colors.green,
+          color: Constants.dimGreen,
           onPressed: () {
             debugPrint("Log Out Pressed");
             Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => Login()));
@@ -315,7 +356,7 @@ class _HomeState extends State<Home> {
             "My Account",
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
-          color: Colors.green,
+          color: Constants.dimGreen,
           onPressed: () {
             debugPrint("Account Pressed");
           },
@@ -477,6 +518,56 @@ class _RunnerCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _ProgressBar extends StatelessWidget {
+  final String category;
+  final double leftAmount;
+  final double progress, width;
+  final Color progressColor;
+
+  const _ProgressBar({Key key, this.category, this.leftAmount, this.progress, this.progressColor, this.width}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(category.toUpperCase(), style: TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.w700,
+        ),),
+        Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Stack(
+              children: <Widget>[
+                Container(
+                  height: 10,
+                  width: width,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                        color: Colors.black12,
+                        ),
+                    ),
+                Container(
+                  height: 10,
+                  width: width * progress,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                    color: progressColor,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(width: 3),
+            Text("${leftAmount}g left")
+          ],
+        )
+      ],
     );
   }
 }
