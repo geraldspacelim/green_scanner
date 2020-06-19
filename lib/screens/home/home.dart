@@ -1,20 +1,15 @@
 import 'dart:convert';
 
 import 'package:barcode_scan/barcode_scan.dart';
-import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:green_scanner/constants/constants.dart';
-import 'package:green_scanner/database.dart';
 import 'package:green_scanner/model/purchase.dart';
 import 'package:green_scanner/model/runnercard.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:provider/provider.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:vector_math/vector_math_64.dart' as math;
 
-import '../../login.dart';
-import '../../login.dart';
 import '../../login.dart';
 import '../../main.dart';
 
@@ -393,7 +388,7 @@ class _HomeState extends State<Home> {
           onPressed: () {
             debugPrint("Submit Pressed");
             setState(() {
-                qrResult = result.rawContent;                
+                qrResult = result.rawContent;
                 //_updateScore(purchase['pointsEarned']);
                 //context.read<Score>().increaseScore(purchase['pointsEarned']);
                 Provider.of<Score>(context, listen: false).increaseScore(totalScore);
