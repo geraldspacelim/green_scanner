@@ -4,6 +4,7 @@ import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:green_scanner/database.dart';
 import 'package:green_scanner/model/purchase.dart';
 import 'package:green_scanner/model/runnercard.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -147,6 +148,12 @@ class _HomeState extends State<Home> {
                 ),
               ),
             ),
+          ),
+          RaisedButton(
+            color: Colors.red,
+            onPressed: () async {
+              await DatabaseService().startDb();
+            },
           ),
           Positioned(
             top: height * 0.38,
