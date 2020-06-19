@@ -1,25 +1,14 @@
-import 'package:mysql1/mysql1.dart';
-
+import 'package:dart_mssql/dart_mssql.dart';
 
 class DatabaseService {
   
   Future startDb() async {
-    var settings = new ConnectionSettings(
-      host: 'green-saver.mysql.database.azure.com', 
-      port: 3306,
-      user: 'greensaver@green-saver',
-      password: 'P@ssw0rd!',
-      db: 'database'
-    );
-    try {
-      print('test');
-      var conn = await MySqlConnection.connect(settings);
-      print('connected');
-      await conn.query('CREATE TABLE users (id int NOT NULL AUTO_INCREMENT PRIMARY KEY, name varchar(255), email varchar(255), age int)'); 
-      await conn.close();
-
-    } catch (e) {
-      print(e);
-    }
+    // var connection = new PostgreSQLConnection("greenserver1.postgres.database.azure.com", 5432, "greendatabase", username: "theway2co@greenserver1", password: "P@ssw0rd!");
+    // await connection.open();
+    // await connection.query("INSERT INTO greentable (name) VALUES ('nicole')");
+    // //await connection.close();
+    SqlConnection connection = SqlConnection(host:"greenscannerserver.database.windows.net", db:"mssqlgreenscanner", user:"theway2co", password:"P@ssw0rd!");
+    String cmd = "INSERT INTO greentable (FirstName) VALUES ('Nicole')";
+    connection.execute(cmd);
   }
 }

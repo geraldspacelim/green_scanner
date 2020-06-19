@@ -149,12 +149,12 @@ class _HomeState extends State<Home> {
               ),
             ),
           ),
-             RaisedButton(
-              color: Colors.red,
-              onPressed: () async {
-                await DatabaseService().startDb();
-              },
-            ),
+            //  RaisedButton(
+            //   color: Colors.red,
+            //   onPressed: () async {
+            //     await DatabaseService().startDb();
+            //   },
+            // ),
           Positioned(
             top: height * 0.38,
             left: 0,
