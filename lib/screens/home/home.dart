@@ -15,40 +15,80 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
 
+  @override
+  void initState(){
+    _updateImage();
+    super.initState();
+  }
+
   String qrResult = "Not Yet";
-  String _setImage() {
+  AssetImage _setImage;
+  int score = 900;
 
-    int score = 900;
+  void _updateImage() {
+    setState(() {
+      if(score > 0 && score < 200){
+        _setImage = new AssetImage("assets/1f.gif");
 
-    if(score > 0 && score < 200){
-      new Future.delayed(const Duration(seconds: 2),(){
+        new Future.delayed(const Duration(milliseconds: 2000), () {
+          setState(() {
+            _setImage = new AssetImage("assets/1s.gif");
+          });
+        });
+      }
 
-      });
-      return "assets/1f.gif";
-    }
+      else if (score >= 200 && score < 400){
+        _setImage = new AssetImage("assets/2f.gif");
 
-    else if (score >= 200 && score < 400){
-      return "assets/2f.gif";
-    }
+        new Future.delayed(const Duration(milliseconds: 2000), () {
+          setState(() {
+            _setImage = new AssetImage("assets/2s.gif");
+          });
+        });
+      }
 
-    else if (score >= 400 && score < 600){
-      return "assets/3f.gif";
-    }
+      else if (score >= 400 && score < 600){
+        _setImage = new AssetImage("assets/3f.gif");
 
-    else if (score >= 600 && score < 800){
-      return "assets/4f.gif";
-    }
+        new Future.delayed(const Duration(milliseconds: 2000), () {
+          setState(() {
+            _setImage = new AssetImage("assets/3s.gif");
+          });
+        });
+      }
 
-    else if (score >= 800 && score < 1000){
-      return "assets/5f.gif";
-    }
+      else if (score >= 600 && score < 800){
+        _setImage = new AssetImage("assets/4f.gif");
 
-    else if (score >= 1000 && score < 1200){
-      return "assets/6f.gif";
-    }
+        new Future.delayed(const Duration(milliseconds: 2000), () {
+          setState(() {
+            _setImage = new AssetImage("assets/4s.gif");
+          });
+        });
+      }
 
-    else return "assets/real_tree.gif";
+      else if (score >= 800 && score < 1000){
+        _setImage = new AssetImage("assets/5f.gif");
 
+        new Future.delayed(const Duration(milliseconds: 2000), () {
+          setState(() {
+            _setImage = new AssetImage("assets/5s.gif");
+          });
+        });
+      }
+
+      else if (score >= 1000 && score < 1200){
+        _setImage = new AssetImage("assets/6f.gif");
+
+        new Future.delayed(const Duration(milliseconds: 2000), () {
+          setState(() {
+            _setImage = new AssetImage("assets/6s.gif");
+          });
+        });
+      }
+
+      else _setImage = new AssetImage("assets/real_tree.gif");
+    });
   }
 
   @override
@@ -61,7 +101,7 @@ class _HomeState extends State<Home> {
             child: new Column(
               children: <Widget>[
                 new Text(qrResult),
-                new Image(image: new AssetImage(_setImage() ?? "assets/real_tree.gif"))
+                new Image(image: _setImage ?? new AssetImage("assets/real_tree.gif")),
               ],
             ),
           ),
