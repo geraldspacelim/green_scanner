@@ -1,6 +1,7 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:green_scanner/constants/constants.dart';
 import 'package:green_scanner/screens/home/home.dart';
 import 'package:green_scanner/screens/rewards/rewards.dart';
 import 'package:green_scanner/screens/history/history.dart';
@@ -53,9 +54,9 @@ class _NavBarState extends State<NavBar> {
 
     return Scaffold(
         bottomNavigationBar: CurvedNavigationBar(
-          color: Colors.lightGreen,
-          backgroundColor: Colors.white,
-          buttonBackgroundColor: Colors.green,
+          color: Constants.deepestGreen,
+          backgroundColor: Constants.backgroundColor,
+          buttonBackgroundColor: Constants.dimGreen,
           index: 1,
           height: 50,
           items: <Widget>[
