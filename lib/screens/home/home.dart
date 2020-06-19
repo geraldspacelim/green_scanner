@@ -234,21 +234,23 @@ class _HomeState extends State<Home> {
                   SizedBox(height: 20,),
                   Expanded(
                     child: Container(
-                      height: 200,
+                      height: 190,
                       width: 400,
-                      margin: const EdgeInsets.only(bottom: 10, left: 32, right: 32,),
+                      margin: const EdgeInsets.only(bottom: 10, left: 15, right: 15,),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          SizedBox(height: 15,),
+                         // SizedBox(height: 15,),
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget>[
                               _RadialProgress(
                                 width: width * 0.25,
                                 height: width * 0.25,
                                 progress: 0.3,
                               ),
-                              SizedBox(width: 15,),
+                              SizedBox(width: 5,),
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 mainAxisSize: MainAxisSize.max,

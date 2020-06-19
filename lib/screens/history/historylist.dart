@@ -13,9 +13,9 @@ class _HistoryListState extends State<HistoryList> {
   Widget build(BuildContext context) {
     // List of rewards
     List<Purchase> purchases = [
-      new Purchase(item: "Whole Milk, One Pint", carbonFootprint: 900, pointsEarned: 30, image: Icon(Icons.local_drink)),
-      new Purchase(item: "Orange Juice", carbonFootprint: 360, pointsEarned: 60, image: Icon(Icons.local_drink)),
-      new Purchase(item: "Washing Liquid", carbonFootprint: 900, pointsEarned: 10, image: Icon(Icons.local_laundry_service)),
+      Purchase().getPurchase("wl1"),
+      Purchase().getPurchase("b2"),
+      Purchase().getPurchase("r4"),
     ];
 
     return ListView.builder(

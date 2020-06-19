@@ -56,7 +56,11 @@ class _RewardsTileState extends State<RewardsTile> {
                     return Column(
                       children: <Widget>[
                         ListTile(
-                          leading: widget.reward.image,
+                          leading: Image.asset(
+                            widget.reward.imagePath,
+                            fit: BoxFit.fitHeight,
+                          ),
+                            
                           title: Text(widget.reward.title),
                           subtitle: Text(widget.reward.pointsRequired.toString()),                         
                         ),

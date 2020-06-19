@@ -14,9 +14,9 @@ class _RewardsListState extends State<RewardsList> {
 
     // List of rewards
     List<Reward> rewards = [
-      new Reward(title: "5SGD Starbucks Voucher", pointsRequired: 60, image: Icon(Icons.local_drink)),
-      new Reward(title: "Free GV Movie Ticket", pointsRequired: 120, image: Icon(Icons.movie)),
-      new Reward(title: "10SGD Capitaland Voucher", pointsRequired: 150, image: Icon(Icons.shopping_cart)),
+      new Reward(title: "Reusable Cutlery Set from Wheat Cutlery", pointsRequired: 60, imagePath: "assets/cutleryset.jpg"),
+      new Reward(title: "Natural Deodorant from Madara", pointsRequired: 120, imagePath: "assets/deodorant.jpg"),
+      new Reward(title: "98% Natural Shampoo from Diane Bonheur", pointsRequired: 150, imagePath: "assets/shampoo.jpg"),
     ];
 
     return ListView.builder(

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class Reward {
   final String title;
   final int pointsRequired;
-  final Icon image;
+  final String imagePath;
 
-  Reward({this.title, this.pointsRequired, this.image});
+  Reward({this.title, this.pointsRequired, this.imagePath});
 }
