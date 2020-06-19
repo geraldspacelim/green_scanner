@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:green_scanner/screens/rewards/rewardslist.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
+
+import '../../main.dart';
 
 
 class Rewards extends StatefulWidget {
-
-  int points = 100;
-  Rewards({this.points});
 
   @override
   _RewardsState createState() => _RewardsState();
@@ -13,7 +14,6 @@ class Rewards extends StatefulWidget {
 
 class _RewardsState extends State<Rewards> {
 
-  int points = 100;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class _RewardsState extends State<Rewards> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget> [
           SizedBox(height: 50),
-          Text('Points: $points'),
+          Text("Score: "+context.watch<Score>().score.toString()),
           SizedBox(height: 20),
           RewardsList(),
         ]

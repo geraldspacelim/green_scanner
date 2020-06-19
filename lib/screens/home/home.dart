@@ -2,10 +2,14 @@ import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import 'package:provider/provider.dart';
 
 import '../../login.dart';
 import '../../login.dart';
 import '../../login.dart';
+import '../../main.dart';
 
 
 class Home extends StatefulWidget {
@@ -15,10 +19,22 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
 
-  String qrResult = "Not Yet";
-  String _setImage() {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _score = _prefs.then((SharedPreferences prefs) {
+      return (prefs.getInt('score') ?? 0);
+    });
+  }
 
-    int score = 900;
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  Future<int> _score;
+  int score;
+
+  String qrResult = "Not Yet";
+
+  String _setImage(int score)  {
 
     if(score > 0 && score < 200){
       new Future.delayed(const Duration(seconds: 2),(){
@@ -51,6 +67,19 @@ class _HomeState extends State<Home> {
 
   }
 
+  
+  Future<void> _updateScore(int score) async {
+    final SharedPreferences prefs = await _prefs;
+    int updatedScore = (prefs.getInt('score') ?? 0)+score;
+    print(updatedScore);
+    setState(() {
+      _score = prefs.setInt('score', updatedScore).then((bool success) {
+        return updatedScore;
+      });
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,7 +90,9 @@ class _HomeState extends State<Home> {
             child: new Column(
               children: <Widget>[
                 new Text(qrResult),
-                new Image(image: new AssetImage(_setImage() ?? "assets/real_tree.gif"))
+                Text(context.watch<Score>().score.toString()),
+                Text(Provider.of<Score>(context, listen: true).toString()),
+                Image(image: new AssetImage(_setImage(context.watch<Score>().score) ?? "assets/real_tree.gif")),   
               ],
             ),
           ),
@@ -88,13 +119,17 @@ class _HomeState extends State<Home> {
             label: "Camera",
             onTap: () async {
               var result = await BarcodeScanner.scan();
-              setState(() {
-                qrResult = result.rawContent;
-                print(result.type); // The result type (barcode, cancelled, failed)
-                print(result.rawContent); // The barcode content
-                print(result.format); // The barcode format (as enum)
-                print(result.formatNote); // If a unknown format was scanned this field contains a note
-              });
+              _onQrScanned(context, result);
+              // setState(() {
+              //   qrResult = result.rawContent;
+              //   Map<String, dynamic> purchase = jsonDecode(result.rawContent);
+              //   print(purchase['pointsEarned']);
+              //   _updateScore(purchase['pointsEarned']);
+              //   print(result.type); // The result type (barcode, cancelled, failed)
+              //   print(result.rawContent); // The barcode content
+              //   print(result.format); // The barcode format (as enum)
+              //   print(result.formatNote); // If a unknown format was scanned this field contains a note
+              // });
             }
           ),
           SpeedDialChild(
@@ -134,6 +169,53 @@ class _HomeState extends State<Home> {
           color: Colors.green,
           onPressed: () {
             debugPrint("Account Pressed");
+          },
+          width: 240,
+        ),
+      ],
+    ).show();
+  }
+
+  _onQrScanned(context, var result) {
+    Map<String, dynamic> purchase = jsonDecode(result.rawContent);
+    String date = purchase['date'];
+    int score = purchase['pointsEarned'];
+    Alert(
+      context: context,
+      title: "Submit Purchases",
+      desc: "Submitting purchases for $date. You have earned $score points from this purchase.",
+      style: alertStyle,
+      buttons: [
+        DialogButton(
+          child: Text(
+            "Submit",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          color: Colors.green,
+          onPressed: () {
+            debugPrint("Submit Pressed");
+            setState(() {
+                qrResult = result.rawContent;                
+                //_updateScore(purchase['pointsEarned']);
+                //context.read<Score>().increaseScore(purchase['pointsEarned']);
+                Provider.of<Score>(context, listen: false).increaseScore(purchase['pointsEarned']);
+                print(result.type); // The result type (barcode, cancelled, failed)
+                print(result.rawContent); // The barcode content
+                print(result.format); // The barcode format (as enum)
+                print(result.formatNote); // If a unknown format was scanned this field contains a note
+              });
+              Navigator.pop(context);
+          },
+          width: 240,
+        ),
+        DialogButton(
+          child: Text(
+            "cancel",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          color: Colors.grey,
+          onPressed: () {
+            Navigator.pop(context);
           },
           width: 240,
         ),
