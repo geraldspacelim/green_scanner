@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:green_scanner/model/reward.dart';
 import 'package:green_scanner/screens/rewards/rewards.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';

@@ -22,10 +22,3 @@ class _HistoryState extends State<History> {
   }
 }
 
-class Purchase {
-  final String item;
-  final int carbonFootprint;
-  final int pointsEarned;
-  final Icon image;
-  Purchase({this.item, this.carbonFootprint, this.pointsEarned, this.image});
-}

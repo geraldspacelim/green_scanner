@@ -1,14 +1,19 @@
+import 'dart:convert';
+
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:green_scanner/model/purchase.dart';
 import 'package:green_scanner/model/runnercard.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:provider/provider.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
 import '../../login.dart';
 import '../../login.dart';
 import '../../login.dart';
+import '../../main.dart';
 
 
 class Home extends StatefulWidget {
@@ -152,6 +157,14 @@ class _HomeState extends State<Home> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  Text(
+                      "Score: ${context.watch<Score>().score.toString()}",
+                      style: const TextStyle(
+                        color: Colors.blueGrey,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
                   Padding(
                     padding: const EdgeInsets.only(
                     bottom: 8,
@@ -250,13 +263,15 @@ class _HomeState extends State<Home> {
             label: "Camera",
             onTap: () async {
               var result = await BarcodeScanner.scan();
-              setState(() {
-                qrResult = result.rawContent;
-                print(result.type); // The result type (barcode, cancelled, failed)
-                print(result.rawContent); // The barcode content
-                print(result.format); // The barcode format (as enum)
-                print(result.formatNote); // If a unknown format was scanned this field contains a note
-              });
+              print(result.rawContent); // The barcode content
+              _onQrScanned(context, result);
+              // setState(() {
+              //   qrResult = result.rawContent;
+              //   print(result.type); // The result type (barcode, cancelled, failed)
+              //   print(result.rawContent); // The barcode content
+              //   print(result.format); // The barcode format (as enum)
+              //   print(result.formatNote); // If a unknown format was scanned this field contains a note
+              // });
             }
           ),
           SpeedDialChild(
@@ -296,6 +311,61 @@ class _HomeState extends State<Home> {
           color: Colors.green,
           onPressed: () {
             debugPrint("Account Pressed");
+          },
+          width: 240,
+        ),
+      ],
+    ).show();
+  }
+
+  _onQrScanned(context, var result) {
+    Map<String, dynamic> receipt = jsonDecode(result.rawContent);
+    String date = receipt['date'];
+    List purchasesList = receipt['purchasesList']; // String of all the purchase IDs in the receipt
+    print(purchasesList.runtimeType);
+    final purchases = Purchase(); // access purchases database
+    int totalScore = 0;
+    for (var productID in purchasesList) { // 'pulling' relevant data from  database
+      print("this receipt contains ${productID.toString()}");
+      Purchase purchaseSelected = purchases.getPurchase(productID.toString());
+      totalScore = totalScore + purchaseSelected.pointsEarned;
+    }
+    Alert(
+      context: context,
+      title: "Submit Purchases",
+      desc: "Submitting purchases for $date. You have earned $totalScore points from this purchase.",
+      style: alertStyle,
+      buttons: [
+        DialogButton(
+          child: Text(
+            "Submit",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          color: Colors.green,
+          onPressed: () {
+            debugPrint("Submit Pressed");
+            setState(() {
+                qrResult = result.rawContent;                
+                //_updateScore(purchase['pointsEarned']);
+                //context.read<Score>().increaseScore(purchase['pointsEarned']);
+                Provider.of<Score>(context, listen: false).increaseScore(totalScore);
+                print(result.type); // The result type (barcode, cancelled, failed)
+                print(result.rawContent); // The barcode content
+                print(result.format); // The barcode format (as enum)
+                print(result.formatNote); // If a unknown format was scanned this field contains a note
+              });
+              Navigator.pop(context);
+          },
+          width: 240,
+        ),
+        DialogButton(
+          child: Text(
+            "cancel",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          color: Colors.grey,
+          onPressed: () {
+            Navigator.pop(context);
           },
           width: 240,
         ),

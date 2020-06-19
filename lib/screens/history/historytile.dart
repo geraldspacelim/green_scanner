@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:green_scanner/model/purchase.dart';
 import 'package:green_scanner/screens/history/history.dart';
 
 class HistoryTile extends StatefulWidget {

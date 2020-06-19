@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:green_scanner/model/reward.dart';
 import 'package:green_scanner/screens/rewards/rewards.dart';
 import 'package:green_scanner/screens/rewards/rewardstile.dart';
 
