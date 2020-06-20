@@ -21,8 +21,10 @@ class _RewardsState extends State<Rewards> {
   @override
   void initState() {
     // TODO: implement initState
+
+    _getScore();
     super.initState();
-    getScore();
+    
   }
 
 
@@ -33,7 +35,7 @@ class _RewardsState extends State<Rewards> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget> [
           SizedBox(height: 50),
-          Text("Score: $score"),
+          Text("Score: ${context.watch<Score>().score}"),
           SizedBox(height: 20),
           RewardsList(),
         ]
@@ -41,18 +43,21 @@ class _RewardsState extends State<Rewards> {
     );
   }
 
-  void getScore() async {
+  _getScore() async {
     var url = 'http://greenscanner.azurewebsites.net/users/username';
     var response = await http.get(url);
     if (response.statusCode == 200) {
-      var jsonResponse = convert.jsonDecode(response.body);
-      print(jsonResponse['points'].toString());
-      int result = int.parse(jsonResponse['points'].toString());
-      score = result;
-      //print(score);
-    } else {
-      print("failed");
-    }
+        var jsonResponse = convert.jsonDecode(response.body);
+        print(jsonResponse['points'].toString());
+        int result = jsonResponse['points'];
+        print("result is $result");
+        context.read<Score>().updatePage(result);
+        setState(() { 
+        });
+      } else {
+        print("failed");
+      }
+    
   }
 }
 

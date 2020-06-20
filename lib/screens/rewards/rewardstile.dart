@@ -4,6 +4,8 @@ import 'package:green_scanner/screens/rewards/rewards.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert' as convert;
 
 import '../../main.dart';
 
@@ -20,15 +22,13 @@ class RewardsTile extends StatefulWidget {
 class _RewardsTileState extends State<RewardsTile> {
 
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  Future<int> _score;
+  int score;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _score = _prefs.then((SharedPreferences prefs) {
-      return (prefs.getInt('score') ?? 0);
-    });
+    _getScore();
   }
 
 
@@ -42,18 +42,7 @@ class _RewardsTileState extends State<RewardsTile> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget> [
             SizedBox(height: 5,),
-            FutureBuilder<int>(
-            future: _score,
-            builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.waiting:
-                  return const CircularProgressIndicator();
-                default:
-                  if (snapshot.hasError) {
-                    return Text(snapshot.error);
-                  } else {
-                    int score = snapshot.data;
-                    return Column(
+            Column(
                       children: <Widget>[
                         ListTile(
                           leading: Image.asset(
@@ -75,11 +64,7 @@ class _RewardsTileState extends State<RewardsTile> {
                           ],
                         )
                       ],
-                    );
-                  }
-              }
-            }
-          ),
+                    ),
             
           ]
         ),
@@ -87,15 +72,31 @@ class _RewardsTileState extends State<RewardsTile> {
     );
   }
 
-  Future<void> _checkScore(String reward, int pointsRequired) async {
-    int score = context.read<Score>().score;
+  _getScore() async {
+    var url = 'http://greenscanner.azurewebsites.net/users/username';
+    var response = await http.get(url);
+    if (response.statusCode == 200) {
+        var jsonResponse = convert.jsonDecode(response.body);
+        print(jsonResponse['points'].toString());
+        int result = jsonResponse['points'];
+        print("result is $result");
+        score = result;
+       // context.read<Score>().updatePage(result);
+        print("review score set to $score");
+      } else {
+        print("failed");
+      }
+    
+  }
+
+  void _checkScore(String reward, int pointsRequired) async {
+    await _getScore();
     if (score >= pointsRequired) {
       _claimRewardConfirm(context, reward, pointsRequired);
     } else {
       _insufficientPoints(context);
     }
   }
-
 
   _insufficientPoints(context) {
     Alert(
@@ -120,6 +121,24 @@ class _RewardsTileState extends State<RewardsTile> {
     ).show();
   }
 
+  _deductScore(int pointsRequired) async {
+    int remainingPoints = score - pointsRequired;
+    var url = 'http://greenscanner.azurewebsites.net/update/$remainingPoints';
+    var response = await http.get(url);
+    if (response.statusCode == 200) {
+      //var jsonResponse = convert.jsonDecode(response.body);
+      //print(jsonResponse['points'].toString());
+      await _getScore();
+      context.read<Score>().updatePage(remainingPoints);
+      setState(() {
+        print('score after deduction is $score');
+        
+      });
+    } else {
+      print("failed");
+    }
+  }
+
   _claimRewardConfirm(context, String reward, int pointsRequired) {
     Alert(
       context: context,
@@ -135,10 +154,8 @@ class _RewardsTileState extends State<RewardsTile> {
           color: Colors.green,
           onPressed: () {
             debugPrint("Confirmed Pressed");
-            setState(() {
-                Provider.of<Score>(context, listen: false).deductScore(pointsRequired);
-              });
-              Navigator.pop(context);
+            _deductScore(pointsRequired);
+            Navigator.pop(context);
           },
           width: 240,
         ),
@@ -156,6 +173,7 @@ class _RewardsTileState extends State<RewardsTile> {
       ],
     ).show();
   }
+
 
   var alertStyle = AlertStyle(
     animationType: AnimationType.grow,
@@ -175,4 +193,11 @@ class _RewardsTileState extends State<RewardsTile> {
   );
 
 
+
 }
+
+
+  
+
+  
+

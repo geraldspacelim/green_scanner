@@ -86,7 +86,8 @@ class _HomeState extends State<Home> {
 
   @override
   void initState(){
-    _updateImage();
+    _getScore().then((score) {_updateImage();});
+    //_updateImage();
     super.initState();
   }
 
@@ -95,7 +96,6 @@ class _HomeState extends State<Home> {
   int score;
 
   void _updateImage() async {
-    await _getScore();
     setState(() {
       if(score > 0 && score < 200){
         _setImage = new AssetImage("assets/1f.gif");
@@ -165,7 +165,6 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    _getScore();
     return Scaffold(
       backgroundColor: Constants.backgroundColor,
       body: Stack(
@@ -197,8 +196,14 @@ class _HomeState extends State<Home> {
               height: height * 0.5,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
+                children: <Widget>[         
+                   Padding(
+                    padding: const EdgeInsets.only(
+                    bottom: 8,
+                      left: 32,
+                      right: 16,
+                    ),
+                    child: Text(
                       "Score: $score",
                       style: const TextStyle(
                         color: Colors.blueGrey,
@@ -206,6 +211,7 @@ class _HomeState extends State<Home> {
                         fontWeight: FontWeight.w700,
                       ),
                     ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(
                     bottom: 8,
@@ -339,7 +345,8 @@ class _HomeState extends State<Home> {
     if (response.statusCode == 200) {
         var jsonResponse = convert.jsonDecode(response.body);
         print(jsonResponse['points'].toString());
-        int result = int.parse(jsonResponse['points'].toString());
+        int result = jsonResponse['points'];
+        print("result is $result");
         score = result;
       } else {
         print("failed");
@@ -407,23 +414,10 @@ class _HomeState extends State<Home> {
           color: Colors.green,
           onPressed: () {
             debugPrint("Submit Pressed");
-            setState(() async  {
-                qrResult = result.rawContent;
-                //_updateScore(purchase['pointsEarned']);
-                //context.read<Score>().increaseScore(purchase['pointsEarned']);
-                Provider.of<Score>(context, listen: false).increaseScore(totalScore);
-                Provider.of<PrevPurchaseList>(context, listen: false).addPurchases(date, purchasesList);
-                // POSTING PURCHASES TO HISTORY DATABASE
-                // var url = '';
-                // for (var productID in purchasesList) { // 'pulling' relevant data from  database
-                //   var response = await http.post(url, body: {'username': 'username', 'purchase': productID.toString()});
-                //   print("added to database ${productID.toString()}");          
-                // }               
-                print(result.type); // The result type (barcode, cancelled, failed)
-                print(result.rawContent); // The barcode content
-                print(result.format); // The barcode format (as enum)
-                print(result.formatNote); // If a unknown format was scanned this field contains a note
-              });
+            _increaseScore(totalScore);
+            Provider.of<PrevPurchaseList>(context, listen: false).addPurchases(date, purchasesList);
+            qrResult = result.rawContent;
+            
               Navigator.pop(context);
           },
           width: 240,
@@ -441,6 +435,23 @@ class _HomeState extends State<Home> {
         ),
       ],
     ).show();
+  }
+
+  _increaseScore(int pointsAdded) async {
+    int totalPoints = score + pointsAdded;
+    var url = 'http://greenscanner.azurewebsites.net/update/$totalPoints';
+    var response = await http.get(url);
+    if (response.statusCode == 200) {
+      //var jsonResponse = convert.jsonDecode(response.body);
+      //print(jsonResponse['points'].toString());
+      await _getScore();
+      setState(() {
+        print('score after addition is $score');
+
+      });
+    } else {
+      print("failed");
+    }
   }
 
   var alertStyle = AlertStyle(
@@ -479,7 +490,7 @@ class _RunnerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(right: 20,bottom: 10,),
+      margin: const EdgeInsets.only(right: 20,),
       child: Material(
         borderRadius: BorderRadius.all(Radius.circular(20)),
         elevation: 4,
@@ -512,12 +523,12 @@ class _RunnerCard extends StatelessWidget {
                     Text("Points",
                     style: const TextStyle(
                       fontWeight: FontWeight.w500,
-                      fontSize: 14,
+                      fontSize: 12,
                       color: Colors.blueGrey
                     ),),
                     Text(runnerCard.points, style: const TextStyle(
                       fontWeight: FontWeight.w700,
-                      fontSize: 18,
+                      fontSize: 16,
                       color: Colors.black,
                     )),
                     Row(
@@ -527,12 +538,12 @@ class _RunnerCard extends StatelessWidget {
                         Text("${runnerCard.items}",
                         style: const TextStyle(
                           fontWeight: FontWeight.w500,
-                          fontSize: 14,
+                          fontSize: 12,
                           color: Colors.blueGrey,
                         ),)
                       ],
                     ),
-                    SizedBox(height:5),
+                    //SizedBox(height:5),
                   ],
                 ),
               ),

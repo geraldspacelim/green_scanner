@@ -9,16 +9,17 @@ class History extends StatefulWidget {
 class _HistoryState extends State<History> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget> [
-          SizedBox(height: 40),
-          Text("Previous Purchases"),
-          HistoryList(),
-        ]
-      ),
-    );
+    return SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget> [
+            SizedBox(height: 40),
+            Text("Previous Purchases"),
+            HistoryList(),
+          ]
+        ),
+      );
+    
   }
 }
 

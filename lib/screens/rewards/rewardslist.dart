@@ -4,6 +4,7 @@ import 'package:green_scanner/screens/rewards/rewards.dart';
 import 'package:green_scanner/screens/rewards/rewardstile.dart';
 
 class RewardsList extends StatefulWidget {
+
   @override
   _RewardsListState createState() => _RewardsListState();
 }

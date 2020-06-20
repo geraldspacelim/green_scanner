@@ -30,31 +30,8 @@ class Score with ChangeNotifier, DiagnosticableTreeMixin {
   int _score = 0;
   int get score => _score;
 
-
-  dynamic getScore() async {
-    var url = 'http://greenscanner.azurewebsites.net/users/username';
-    var response = await http.get(url);
-    if (response.statusCode == 200) {
-      var jsonResponse = convert.jsonDecode(response.body);
-      print(jsonResponse['points'].toString());
-      int result = int.parse(jsonResponse['points'].toString());
-      _score = result;
-      notifyListeners();
-      return result;
-    } else {
-      print("failed");
-      return null;
-    }
-  }
-  
-  
-  void deductScore(int pointsRequired) {
-    _score = _score - pointsRequired;
-    notifyListeners();
-  }
-
-  void increaseScore(int pointsAdded) {
-    _score = _score + pointsAdded;
+  void updatePage(int updatedScore) {
+    _score = updatedScore;
     notifyListeners();
   }
 
