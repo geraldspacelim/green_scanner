@@ -101,5 +101,7 @@ Benjamin Lim
 
 ## Additional Links: 
 Link to REST API: https://github.com/tengfone/green_scanner_RESTAPI/
+
 Link to pitch deck: https://docs.google.com/presentation/d/1VBipHGvXUma2zHcfQqHGtp5HLkQIOgnr6RmbSNqz6U4/edit?usp=sharing
+
 Link to youtube video: https://www.youtube.com/watch?v=ZxUzI3PpCks
