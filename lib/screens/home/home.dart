@@ -1,3 +1,4 @@
+import 'dart:convert' as convert;
 import 'dart:convert';
 
 import 'package:barcode_scan/barcode_scan.dart';
@@ -9,6 +10,7 @@ import 'package:green_scanner/model/runnercard.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:provider/provider.dart';
 import 'package:vector_math/vector_math_64.dart' as math;
+import 'package:http/http.dart' as http;
 
 import '../../login.dart';
 import '../../main.dart';
@@ -90,9 +92,10 @@ class _HomeState extends State<Home> {
 
   String qrResult = "Not Yet";
   AssetImage _setImage;
-  int score = 900;
+  int score;
 
-  void _updateImage() {
+  void _updateImage() async {
+    await _getScore();
     setState(() {
       if(score > 0 && score < 200){
         _setImage = new AssetImage("assets/1f.gif");
@@ -162,6 +165,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+    _getScore();
     return Scaffold(
       backgroundColor: Constants.backgroundColor,
       body: Stack(
@@ -195,7 +199,7 @@ class _HomeState extends State<Home> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                      "Score: ${context.watch<Score>().score.toString()}",
+                      "Score: $score",
                       style: const TextStyle(
                         color: Colors.blueGrey,
                         fontSize: 16,
@@ -329,6 +333,20 @@ class _HomeState extends State<Home> {
     );
   }
 
+  _getScore() async {
+    var url = 'http://greenscanner.azurewebsites.net/users/username';
+    var response = await http.get(url);
+    if (response.statusCode == 200) {
+        var jsonResponse = convert.jsonDecode(response.body);
+        print(jsonResponse['points'].toString());
+        int result = int.parse(jsonResponse['points'].toString());
+        score = result;
+      } else {
+        print("failed");
+      }
+    
+  }
+
   // RFlutter_PopUp Dialog
   _onAlertButtonPressed(context) {
     Alert(
@@ -389,12 +407,18 @@ class _HomeState extends State<Home> {
           color: Colors.green,
           onPressed: () {
             debugPrint("Submit Pressed");
-            setState(() {
+            setState(() async  {
                 qrResult = result.rawContent;
                 //_updateScore(purchase['pointsEarned']);
                 //context.read<Score>().increaseScore(purchase['pointsEarned']);
                 Provider.of<Score>(context, listen: false).increaseScore(totalScore);
                 Provider.of<PrevPurchaseList>(context, listen: false).addPurchases(date, purchasesList);
+                // POSTING PURCHASES TO HISTORY DATABASE
+                // var url = '';
+                // for (var productID in purchasesList) { // 'pulling' relevant data from  database
+                //   var response = await http.post(url, body: {'username': 'username', 'purchase': productID.toString()});
+                //   print("added to database ${productID.toString()}");          
+                // }               
                 print(result.type); // The result type (barcode, cancelled, failed)
                 print(result.rawContent); // The barcode content
                 print(result.format); // The barcode format (as enum)

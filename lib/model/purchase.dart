@@ -18,10 +18,10 @@ class Purchase {
       return Purchase(productID: 'wl1', item: "Washing Liquid - Brand A (Average CF)", carbonFootprint: 850, pointsEarned: 50, imagePath: "assets/wlA.jpg");
     }
     if (productID == 'wl2') {
-      return Purchase(productID: 'wl2', item: "Washing Liquid - Brand B (High CF)", carbonFootprint: 0, pointsEarned: 0, imagePath: "assets/wlB.jpg");
+      return Purchase(productID: 'wl2', item: "Washing Liquid - Brand B (High CF)", carbonFootprint: 1000, pointsEarned: 0, imagePath: "assets/wlB.jpg");
     } 
     if (productID == 'wl3') {
-      return Purchase(productID: 'wl3', item: "Washing Liquid - Brand C (Low CF)", carbonFootprint: 100, pointsEarned: 100, imagePath: "assets/wlC.jpg");
+      return Purchase(productID: 'wl3', item: "Washing Liquid - Brand C (Low CF)", carbonFootprint: 700, pointsEarned: 100, imagePath: "assets/wlC.jpg");
     }
     if (productID == 'b1') {
       return Purchase(productID: 'b1', item: "Loaf of Bread - Brand A (Average CF)", carbonFootprint: 1000, pointsEarned: 50, imagePath: "assets/b1.jpg");

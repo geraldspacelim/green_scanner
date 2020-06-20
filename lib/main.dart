@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:green_scanner/login.dart';
@@ -5,10 +7,13 @@ import 'package:green_scanner/model/prevpurchase.dart';
 import 'package:green_scanner/model/purchase.dart';
 import 'package:green_scanner/widgets/navbar.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert' as convert;
 
 import 'login.dart';
 
 void main() {
+
   runApp(
     MultiProvider(
       providers: [
@@ -24,6 +29,24 @@ void main() {
 class Score with ChangeNotifier, DiagnosticableTreeMixin {
   int _score = 0;
   int get score => _score;
+
+
+  dynamic getScore() async {
+    var url = 'http://greenscanner.azurewebsites.net/users/username';
+    var response = await http.get(url);
+    if (response.statusCode == 200) {
+      var jsonResponse = convert.jsonDecode(response.body);
+      print(jsonResponse['points'].toString());
+      int result = int.parse(jsonResponse['points'].toString());
+      _score = result;
+      notifyListeners();
+      return result;
+    } else {
+      print("failed");
+      return null;
+    }
+  }
+  
   
   void deductScore(int pointsRequired) {
     _score = _score - pointsRequired;
