@@ -56,7 +56,7 @@ This is written in ```Flutter``` for export with iOS and Android. The backend co
 
 1. Azure SQL Database
 2. Azure App Services
-3. REST API
+3. [REST API](https://github.com/tengfone/green_scanner_RESTAPI/)
 
 ## Walkthrough
 
@@ -92,3 +92,8 @@ The Database is not fully structured, we implemented the necessary fields.
 
 We tested the App only on both Android Note 8, Android 9.0 and iOS Simulator iPhone 11, iOS 13.5 which is found to be fully functional.
 
+## Credits
+[Gerald Lim](https://github.com/geraldspacelim/)
+Benjamin Lim
+[Nicole Lee](https://github.com/nicoleleexn)
+[Phang Teng Fone](https://github.com/tengfone)
