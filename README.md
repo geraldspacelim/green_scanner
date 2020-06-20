@@ -7,20 +7,48 @@ Our aim is to motivate Singaporeans and merchants to adopt conservative measures
 
 # ScreenShots
 
-![login](screenshots/login.jpg)
+<p align="center">
+<img src="/screenshots/login.jpg" width="300" height="500"/>
+
+<p align="center">
 Login Screen For User Authentication
-![homescreen](screenshots/home.jpg)
+
+<p align="center">
+<img src="/screenshots/home.jpg" width="300" height="500"/>
+<p align="center">
 Home Screen which display an animated tree (score), recommended purchases and dashboard for personal goals
-![history](screenshots/history.jpg)
+
+<p align="center">
+<img src="/screenshots/history.jpg" width="300" height="500"/>
+
+<p align="center">
 A history tab for previous purchase
-![info](screenshots/info.jpg)
+
+
+<p align="center">
+<img src="/screenshots/info.jpg" width="300" height="500"/>
+
+<p align="center">
 Within the history tab, displays additional information about the product's carbon emission
-![rewards](screenshots/rewards.jpg)
+
+<p align="center">
+<img src="/screenshots/rewards.jpg" width="300" height="500"/>
+
+<p align="center">
 Claimable environmentally friendly products/services listed by partners using the score system
-![qrcode](screenshots/qrscan.jpg)
+
+<p align="center">
+<img src="/screenshots/qrscan.jpg" width="300" height="500"/>
+
+<p align="center">
 QR Code Scanner
-![prompt](screenshots/prompt.jpg)
+
+<p align="center">
+<img src="/screenshots/prompt.jpg" width="300" height="500"/>
+
+<p align="center">
 Confirmation to redeem score
+
 
 ## Technology Stack
 
