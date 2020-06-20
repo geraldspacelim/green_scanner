@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:green_scanner/main.dart';
+import 'package:green_scanner/model/prevpurchase.dart';
 import 'package:green_scanner/model/purchase.dart';
 import 'package:green_scanner/screens/history/history.dart';
 import 'package:green_scanner/screens/history/historytile.dart';
+import 'package:provider/provider.dart';
 
 class HistoryList extends StatefulWidget {
   @override
@@ -11,18 +14,20 @@ class HistoryList extends StatefulWidget {
 class _HistoryListState extends State<HistoryList> {
   @override
   Widget build(BuildContext context) {
-    // List of rewards
-    List<Purchase> purchases = [
-      Purchase().getPurchase("wl1"),
-      Purchase().getPurchase("b2"),
-      Purchase().getPurchase("r4"),
-    ];
+
+    // List<PrevPurchase> prevPurchases = [
+    //   PrevPurchase(date: "19/06/2020", purchase: Purchase().getPurchase("wl1")),
+    //   PrevPurchase(date: "19/06/2020", purchase: Purchase().getPurchase("b2")),
+    //   PrevPurchase(date: "19/06/2020", purchase: Purchase().getPurchase("r4"))
+    // ];
+
+    List<PrevPurchase> prevPurchases = Provider.of<PrevPurchaseList>(context, listen: true).prevPurchaseList;
 
     return ListView.builder(
       shrinkWrap: true,
-      itemCount: purchases.length,
+      itemCount: prevPurchases.length,
       itemBuilder: (context, index) {
-        return HistoryTile(purchase: purchases[index]);
+        return HistoryTile(prevPurchase: prevPurchases[index]);
       },
     );
   }

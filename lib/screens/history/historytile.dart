@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:green_scanner/model/prevpurchase.dart';
 import 'package:green_scanner/model/purchase.dart';
 import 'package:green_scanner/screens/history/history.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class HistoryTile extends StatefulWidget {
 
-  final Purchase purchase;
-  HistoryTile({this.purchase});
+
+  final PrevPurchase prevPurchase;
+  HistoryTile({this.prevPurchase});
 
   @override
   _HistoryTileState createState() => _HistoryTileState();
@@ -25,21 +27,22 @@ class _HistoryTileState extends State<HistoryTile> {
             SizedBox(height: 5,),
             ListTile(
               leading: Image.asset(
-                widget.purchase.imagePath,
+                widget.prevPurchase.purchase.imagePath,
                 height: 200,
                 //width: 100,
                 fit: BoxFit.fitHeight,
               ),
-              title: Text(widget.purchase.item),
+              title: Text(widget.prevPurchase.purchase.item),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   SizedBox(height: 5),
-                  Text("Carbon Footprint:"+widget.purchase.carbonFootprint.toString()),
-                  Text("Points Earned:"+widget.purchase.pointsEarned.toString()),
+                  Text("Purchased on: "+widget.prevPurchase.date),
+                  Text("Carbon Footprint:"+widget.prevPurchase.purchase.carbonFootprint.toString()),
+                  Text("Points Earned:"+widget.prevPurchase.purchase.pointsEarned.toString()),
                 ],
               ),
-              onTap: () {_showDetails(context, widget.purchase.productID, widget.purchase.carbonFootprint);},
+              onTap: () {_showDetails(context, widget.prevPurchase.purchase.productID, widget.prevPurchase.purchase.carbonFootprint);},
             ),
           ]
         ),

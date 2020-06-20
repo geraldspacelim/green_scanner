@@ -394,6 +394,7 @@ class _HomeState extends State<Home> {
                 //_updateScore(purchase['pointsEarned']);
                 //context.read<Score>().increaseScore(purchase['pointsEarned']);
                 Provider.of<Score>(context, listen: false).increaseScore(totalScore);
+                Provider.of<PrevPurchaseList>(context, listen: false).addPurchases(date, purchasesList);
                 print(result.type); // The result type (barcode, cancelled, failed)
                 print(result.rawContent); // The barcode content
                 print(result.format); // The barcode format (as enum)
