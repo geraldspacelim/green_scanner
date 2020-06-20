@@ -35,7 +35,13 @@ class _RewardsState extends State<Rewards> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget> [
           SizedBox(height: 50),
-          Text("Score: ${context.watch<Score>().score}"),
+          Text("Score: ${context.watch<Score>().score} ",
+            style: const TextStyle(
+              fontFamily: 'BalsamiqSans',
+              fontWeight: FontWeight.w800,
+              fontSize: 30,
+            ),
+          ),
           SizedBox(height: 20),
           RewardsList(),
         ]

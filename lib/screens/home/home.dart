@@ -39,14 +39,28 @@ class _RadialProgress extends StatelessWidget {
           child: RichText(
             text: TextSpan(
               children: [
-                TextSpan(text: "1600g", style: TextStyle(
-                  fontSize: 18,
+                TextSpan(text: "2250g", style: TextStyle(
+                  fontSize: 16,
                   fontWeight: FontWeight.w900,
                   color: Colors.black,
                 )),
                 TextSpan(text: "\n"),
-                TextSpan(text: "CO2 Saved", style: TextStyle(
+                TextSpan(text: "───", style: TextStyle(
+                  fontWeight: FontWeight.w900,
+                  color: Colors.black,
+                  height: 0.8,
+                )),
+                TextSpan(text: "\n"),
+                TextSpan(text: " 3000g", style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.black,
+                  height: 0.8,
+                )),
+                TextSpan(text: "\n"),
+                TextSpan(text: "CO2 Used", style: TextStyle(
                   fontSize: 10,
+                  height: 2,
                   fontWeight: FontWeight.w900,
                   color: Colors.black,
                 )),
@@ -67,7 +81,7 @@ class _RadialPainter extends CustomPainter{
 
   @override
   void paint(Canvas canvas, Size size) {
-    Paint paint = Paint()..strokeWidth = 10..color=Color(0xFF200087)..style=PaintingStyle.stroke..strokeCap=StrokeCap.round;
+    Paint paint = Paint()..strokeWidth = 10..color=Color(0xFF56C1C1)..style=PaintingStyle.stroke..strokeCap=StrokeCap.round;
 
     Offset center = Offset(size.width/2,size.height/2);
     double relativeProgress = 360 * progress;
@@ -93,7 +107,7 @@ class _HomeState extends State<Home> {
 
   String qrResult = "Not Yet";
   AssetImage _setImage;
-  int score;
+  int score = -99;
 
   void _updateImage() async {
     setState(() {
@@ -147,7 +161,7 @@ class _HomeState extends State<Home> {
         });
       }
 
-      else if (score >= 1000 && score < 1200){
+      else if (score >= 1000){
         _setImage = new AssetImage("assets/6f.gif");
 
         new Future.delayed(const Duration(milliseconds: 2000), () {
@@ -171,45 +185,60 @@ class _HomeState extends State<Home> {
         children: <Widget>[
           Positioned(
             top: 0,
-            height: height * 0.35,
+            height: height * 0.3,
             left: 0,
             right: 0,
-            child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                bottom: const Radius.circular(40),
-              ),
-              child: Container(
-                color: Colors.white,
-                child: new Column(
-                  children: <Widget>[
-                    new Image(image: _setImage ?? new AssetImage("assets/real_tree.gif"),),
-                  ],
-                ),
+            child: Container(
+              color: Colors.white,
+              child: new Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  SizedBox(height: 10,),
+                  new Image(image: _setImage ?? new AssetImage("assets/white.jpg"),
+                    width: 300,
+                    height: 240,
+                  ),
+                ],
               ),
             ),
           ),
           Positioned(
-            top: height * 0.38,
+            top: height * 0.33,
             left: 0,
             right: 0,
             child: Container(
               height: height * 0.5,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[         
+                children: <Widget>[
                    Padding(
                     padding: const EdgeInsets.only(
                     bottom: 8,
                       left: 32,
                       right: 16,
                     ),
-                    child: Text(
-                      "Score: $score",
-                      style: const TextStyle(
-                        color: Colors.blueGrey,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                      ),
+                    child: Row(
+                      children: <Widget>[
+                        Text(
+                          "Score: ",
+                          style: const TextStyle(
+                            color: Colors.blueGrey,
+                            fontSize: 16,
+                            fontFamily: 'BalsamiqSans',
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        Text(
+                          score.isNegative ? ' ' : "${score}",
+                          style: const TextStyle(
+                            color: Colors.blueGrey,
+                            fontSize: 16,
+                            fontFamily: 'BalsamiqSans',
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   Padding(
@@ -219,9 +248,10 @@ class _HomeState extends State<Home> {
                       right: 16,
                     ),
                     child: Text(
-                      "Recent Points",
+                      "Suggested Purchases",
                       style: const TextStyle(
                         color: Colors.blueGrey,
+                        fontFamily: "BalsamiqSans",
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
                       ),
@@ -265,11 +295,11 @@ class _HomeState extends State<Home> {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 mainAxisSize: MainAxisSize.max,
                                 children: <Widget>[
-                                  _ProgressBar(category: "Food", progress: 0.3, progressColor: Colors.green, leftAmount: 200,width: width * 0.35,),
+                                  _ProgressBar(category: "Food", progress: 0.9, progressColor: Color(0xff755CA7), leftAmount: 100,width: width * 0.35,),
                                   SizedBox(height: 5,),
-                                  _ProgressBar(category: "Transport", progress: 0.5, progressColor: Colors.yellow, leftAmount: 100,width: width * 0.35,),
+                                  _ProgressBar(category: "Transport", progress: 0.5, progressColor: Color(0xffE8AE41), leftAmount: 500,width: width * 0.35,),
                                   SizedBox(height: 5,),
-                                  _ProgressBar(category: "Products", progress: 0.8, progressColor: Colors.redAccent, leftAmount: 500,width: width * 0.35,),
+                                  _ProgressBar(category: "Products", progress: 0.3, progressColor: Color(0xffC05766), leftAmount: 150,width: width * 0.35,),
                                 ],
                               ),
                             ],
@@ -278,14 +308,18 @@ class _HomeState extends State<Home> {
                       ),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(30)),
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            const Color(0xFFB5E670),
-                            const Color(0XFF579A22),
-                          ],
-                        )
+                        color: Color(0xFFB4D780),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey[400],
+                            blurRadius: 2.0, // has the effect of softening the shadow
+                            spreadRadius: 2.0, // has the effect of extending the shadow
+                            offset: Offset(
+                              1.0, // horizontal, move right 10
+                              1.0, // vertical, move down 10
+                            ),
+                          ),
+                        ],
                       ),
                     )
                   )
@@ -490,10 +524,10 @@ class _RunnerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(right: 20,),
+      margin: const EdgeInsets.only(right: 20,bottom: 10),
       child: Material(
         borderRadius: BorderRadius.all(Radius.circular(20)),
-        elevation: 4,
+        elevation: 3,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
@@ -533,7 +567,7 @@ class _RunnerCard extends StatelessWidget {
                     )),
                     Row(
                       children: <Widget>[
-                        Icon(Icons.shopping_cart, color: Colors.black12,size: 20,),
+                        Icon(Icons.shopping_cart, color: Colors.blueGrey,size: 20,),
                         SizedBox(width: 4,),
                         Text("${runnerCard.items}",
                         style: const TextStyle(
@@ -543,7 +577,7 @@ class _RunnerCard extends StatelessWidget {
                         ),)
                       ],
                     ),
-                    //SizedBox(height:5),
+                    SizedBox(height:10),
                   ],
                 ),
               ),
@@ -557,7 +591,7 @@ class _RunnerCard extends StatelessWidget {
 
 class _ProgressBar extends StatelessWidget {
   final String category;
-  final double leftAmount;
+  final int leftAmount;
   final double progress, width;
   final Color progressColor;
 
@@ -597,7 +631,11 @@ class _ProgressBar extends StatelessWidget {
               ],
             ),
             SizedBox(width: 3),
-            Text("${leftAmount}g left")
+            Text("${leftAmount}g left",
+            style: const TextStyle(
+              fontFamily: 'BalsamiqSans',
+              color: Color(0xff4d6355),
+            ),)
           ],
         )
       ],

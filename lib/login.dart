@@ -12,6 +12,7 @@ class _LoginState extends State<Login> {
   String password = ''; 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIOverlays([]);
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
