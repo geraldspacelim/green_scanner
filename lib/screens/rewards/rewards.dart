@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:green_scanner/constants/constants.dart';
 import 'package:green_scanner/screens/rewards/rewardslist.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
@@ -31,6 +32,7 @@ class _RewardsState extends State<Rewards> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Constants.backgroundColor,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget> [
