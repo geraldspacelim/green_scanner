@@ -22,12 +22,13 @@ class _HistoryListState extends State<HistoryList> {
     // ];
 
     List<PrevPurchase> prevPurchases = Provider.of<PrevPurchaseList>(context, listen: true).prevPurchaseList;
+    List<PrevPurchase> arrangeList = new List.from(prevPurchases.reversed);
 
     return ListView.builder(
       shrinkWrap: true,
-      itemCount: prevPurchases.length,
+      itemCount: arrangeList.length,
       itemBuilder: (context, index) {
-        return HistoryTile(prevPurchase: prevPurchases[index]);
+        return HistoryTile(prevPurchase: arrangeList[index]);
       },
     );
   }
